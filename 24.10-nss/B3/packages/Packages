@@ -7,8 +7,8 @@ URL: https://github.com/zfl9/chinadns-ng
 Architecture: aarch64_cortex-a53
 Installed-Size: 501760
 Filename: chinadns-ng_2025.03.27-r1_aarch64_cortex-a53.ipk
-Size: 262972
-SHA256sum: 82ea76f36cadb2ba04eef5f7307b52ae29fbba7d9bb2e34bc1adbc2f3b84c8e5
+Size: 262944
+SHA256sum: 698c17faa978ee549280aa683e00d54f04ee7f5b8edfa46ff0d9c0eaee275cd8
 Description:  ChinaDNS next generation, refactoring with epoll and ipset.
 
 Package: cpufreq
@@ -18,8 +18,8 @@ Section: opt
 Architecture: all
 Installed-Size: 10240
 Filename: cpufreq_1_all.ipk
-Size: 2231
-SHA256sum: 2ed86e5f649850e0420b90812a1362d4bce834c5c93fc06e7a7f09cd14ec774e
+Size: 2229
+SHA256sum: ed16ef0880694b356ae57ffbf45d407d5148b2dafd7cdf66e33650c68f0d3145
 Description:  CPU Frequency Scaling adjustment tool
 
 Package: dns2socks
@@ -31,8 +31,8 @@ URL: http://dns2socks.sourceforge.net/
 Architecture: aarch64_cortex-a53
 Installed-Size: 71680
 Filename: dns2socks_2.1-r2_aarch64_cortex-a53.ipk
-Size: 12717
-SHA256sum: 2fbb4df19173adbb79fd95ea8e9db6f4f949707d512295d3117fef2b6e39b9bd
+Size: 12713
+SHA256sum: 485dbb6c6134b5efb5cdfe8de9cca8d2a2a29e0faf029ed97bc5183d6f434b01
 Description:  This is a command line utility to resolve DNS requests via
  a SOCKS tunnel like Tor or a HTTP proxy.
 
@@ -45,8 +45,8 @@ URL: https://github.com/zfl9/dns2tcp
 Architecture: aarch64_cortex-a53
 Installed-Size: 71680
 Filename: dns2tcp_1.1.2-r2_aarch64_cortex-a53.ipk
-Size: 12195
-SHA256sum: 6541114cb17b0c6b8632b3c93e79cc93c64ff6e8e36ef7c284e82b305911d90b
+Size: 12192
+SHA256sum: 1687a6286fb35caa74f3c2e8442123ecbb4c05591191df6cf6295c679b9367e7
 Description:  utility to convert dns query from udp to tcp
 
 Package: geoview
@@ -58,8 +58,8 @@ URL: https://github.com/snowie2000/geoview
 Architecture: aarch64_cortex-a53
 Installed-Size: 5509120
 Filename: geoview_0.1.10-r1_aarch64_cortex-a53.ipk
-Size: 2148958
-SHA256sum: fc277107cedd208986d6ee980af72699d95e1ef19559240a80af5bdd1c146810
+Size: 2148566
+SHA256sum: 62bc4beff2d6346858a77062dd51e867f3c120fee8b46c83e2e442d696f49e1b
 Description:  geoview is a handy tool to extract useful information from geo* files.
 
 Package: luci-app-alpha-config
@@ -71,20 +71,20 @@ URL: https://github.com/openwrt/luci
 Architecture: all
 Installed-Size: 20480
 Filename: luci-app-alpha-config_2.1-r1_all.ipk
-Size: 2733
-SHA256sum: 6a88237cb3e37f99d16bad3497ec9d9be18efbecb84cf35af6688dc1121413c3
+Size: 2722
+SHA256sum: 120c10061087724dc1afca8005da95ae2728e89532c24863fe887e894c220b8e
 Description:  Configuration Alpha theme in LuCI.
 
 Package: luci-app-argon-config
-Version: 25.162.63822~dd10f13
+Version: 25.163.67904~4b6317c
 Depends: libc, luci-theme-argon
 Section: luci
 URL: https://github.com/openwrt/luci
 Architecture: all
 Installed-Size: 30720
-Filename: luci-app-argon-config_25.162.63822~dd10f13_all.ipk
-Size: 3958
-SHA256sum: 35314be87bbea6dafadc6b70113dfc6c96c1e028486cde439855083534a9ccf1
+Filename: luci-app-argon-config_25.163.67904~4b6317c_all.ipk
+Size: 3951
+SHA256sum: b98b17cbe98ccefa22dd6f34318fb8e074f1e23d391c25095dfde0a55182682d
 Description:  LuCI for Argon theme configuration
 
 Package: luci-app-atcommands
@@ -96,19 +96,19 @@ Architecture: all
 Installed-Size: 30720
 Filename: luci-app-atcommands_1.0.9-r20241111_all.ipk
 Size: 3994
-SHA256sum: c7ca378267e6454f277962aad30baa2c74f8ab5dc0b61c594dc2699ce4d0d9bc
+SHA256sum: 2b3c8ff5c0586359aa01c7c80260537aa78287b330bacab7eaf4baafc24d95c8
 Description:  LuCI JS interface for the sms-tool. The user interface supports only AT commands.
 
 Package: luci-app-cpufreq
-Version: 25.162.63822~dd10f13
+Version: 25.163.67904~4b6317c
 Depends: libc, cpufreq
 Section: luci
 URL: https://github.com/openwrt/luci
 Architecture: all
 Installed-Size: 20480
-Filename: luci-app-cpufreq_25.162.63822~dd10f13_all.ipk
-Size: 2464
-SHA256sum: 412d38446bd843f2c18f54b7045e319082d037b451a3675fa069cef91f515570
+Filename: luci-app-cpufreq_25.163.67904~4b6317c_all.ipk
+Size: 2460
+SHA256sum: 31c94dc0bdcf585525b44939661e9b78e4231eea73aa7877608e1a8a1d7032ef
 Description:  LuCI for CPU Freq Setting
 
 Package: luci-app-ipinfo
@@ -120,8 +120,8 @@ URL: https://github.com/openwrt/luci
 Architecture: all
 Installed-Size: 20480
 Filename: luci-app-ipinfo_2.4-r1_all.ipk
-Size: 2941
-SHA256sum: c23683f65f7137ed36f6654301443948bd746bd6598eb7e0c8646d46a5842dd3
+Size: 2943
+SHA256sum: 26a1e9c1e51161fcb0a17c7b154a124d7057075478cb2e7f420de693bc5835d2
 Description:  Displays IP address information in overview via ip.guide.
 
 Package: luci-app-modeminfo
@@ -132,8 +132,8 @@ Section: luci
 Architecture: all
 Installed-Size: 51200
 Filename: luci-app-modeminfo_1.0-r1_all.ipk
-Size: 10500
-SHA256sum: 0c6caba91353d347c1fb022b2c0a02dfb1fba1d1248a9f4772555a086a5581b2
+Size: 10497
+SHA256sum: 6a81ca1d1746b65d30a1fa6bf08d52c920e4d12bd8cf485c7349af8bfc35fd46
 Description:  This LuCI app provides modem information in a web interface.
 
 Package: luci-app-nft-ttl
@@ -144,8 +144,8 @@ Section: luci
 Architecture: all
 Installed-Size: 30720
 Filename: luci-app-nft-ttl_1.0-r1_all.ipk
-Size: 5130
-SHA256sum: 4c53b9e81fc7c3df60efa0404a4aa61c648fa34b0a4bbfc559b454d6e26d0b28
+Size: 5079
+SHA256sum: 8b1488966944e9fa1b6c2c727d73f161f738cd883d1dfc8cec71385d22319889
 Description:  This LuCI app provides TTL changer functionality in a web interface.
 
 Package: luci-app-nikki
@@ -156,8 +156,8 @@ URL: https://github.com/openwrt/luci
 Architecture: all
 Installed-Size: 61440
 Filename: luci-app-nikki_1.22.4-r1_all.ipk
-Size: 9689
-SHA256sum: 27e8176664ce954f056c3bbaad1a8c41629cbb41aaf911e4923687a4eb325337
+Size: 9682
+SHA256sum: 50100dcb6726d9969bb6607d6d5c28dc46b39d1ada71a54536d98ef49dfbe70d
 Description:  LuCI Support for nikki
 
 Package: luci-app-passwall2
@@ -168,8 +168,8 @@ URL: https://github.com/openwrt/luci
 Architecture: all
 Installed-Size: 890880
 Filename: luci-app-passwall2_25.5.15-r1_all.ipk
-Size: 238891
-SHA256sum: c4975350f1066e6e7949e90cdde0be85a16428e2dfe1a4eff0e57f7fd35eb444
+Size: 238904
+SHA256sum: d0b185b19e469a162d8258479810b0e0db1600c32b6a79aa8e84f4ed19a1643a
 Description:  LuCI support for PassWall 2
 
 Package: luci-app-passwall
@@ -180,8 +180,8 @@ URL: https://github.com/openwrt/luci
 Architecture: all
 Installed-Size: 2764800
 Filename: luci-app-passwall_4.67.0-r1_all.ipk
-Size: 1006723
-SHA256sum: b6c8e07a46f0f7d8ccf62bc70e3893d642cadb0959f39d753dd615b1de879e83
+Size: 1006784
+SHA256sum: 5544662b33918806be64e608c882342b11af52d2f07e153dffc5ebec327aafbc
 Description:  LuCI support for PassWall
 
 Package: luci-app-ramfree
@@ -192,8 +192,8 @@ URL: https://github.com/openwrt/luci
 Architecture: all
 Installed-Size: 10240
 Filename: luci-app-ramfree_1.0-r1_all.ipk
-Size: 1425
-SHA256sum: 657319746718b89cfcfa8b4d5566a25d604c4f5b19bab6ba3ad0a69b53fb2f31
+Size: 1422
+SHA256sum: 81c49fc059ac4f81f91c0159504796aa86b4203bdc70908b676fa05a1d5a0bbf
 Description:  luci-app-ramfree
 
 Package: luci-app-tailscale
@@ -204,8 +204,8 @@ URL: https://github.com/openwrt/luci
 Architecture: all
 Installed-Size: 40960
 Filename: luci-app-tailscale_1.2.3-r1_all.ipk
-Size: 8631
-SHA256sum: ac88e7104bb8074a8ab38b952a2879f7c3cb666b7bc8d71ad8f53a07d7a364b0
+Size: 8620
+SHA256sum: 6db8a3ff6a2a830f495d0f9e23c2dafac600c966bb5d5aba48c8db30391dab7d
 Description:  LuCI for Tailscale
 
 Package: luci-theme-alpha
@@ -216,8 +216,8 @@ URL: http://facebook.com/derisamedia/
 Architecture: all
 Installed-Size: 3594240
 Filename: luci-theme-alpha_3.9.5-beta-r10_all.ipk
-Size: 3003365
-SHA256sum: ce09184e5fd470baa565e75dd7d33d02240457ab49dcf70c5e5f6af7cb505cc4
+Size: 3003301
+SHA256sum: f84c5be9bfda2f757f6648ab52533a0df181552ca20c6c422c66266766be9192
 Description:  LuCi Theme For OpenWrt And Alpha OS ONLY - Alpha
 
 Package: luci-theme-argon
@@ -228,8 +228,8 @@ URL: https://github.com/openwrt/luci
 Architecture: all
 Installed-Size: 768000
 Filename: luci-theme-argon_2.3.2-r20250207_all.ipk
-Size: 391245
-SHA256sum: dbf809718681f164d4453a8542bc5512c17940fd81e333477ee7f7822ca76e30
+Size: 391237
+SHA256sum: 1ed436c5b91b52c79f9bfe0ef53a81a4f492b4967941e003123ac45073dac91b
 Description:  Argon Theme
 
 Package: luci-theme-kucat
@@ -240,8 +240,8 @@ URL: https://github.com/openwrt/luci
 Architecture: all
 Installed-Size: 1239040
 Filename: luci-theme-kucat_2.5.9-r20250418_all.ipk
-Size: 962854
-SHA256sum: cd93237ee6f50af712389a8eb5e7b651312135213b2492760b63ed622398f878
+Size: 962835
+SHA256sum: 8362827a95d0a1441712f5b63c553bfac66e0afdf44681c9d3e13f80d4fbfedd
 Description:  Kucat Theme by sirpdboy
 
 Package: nikki
@@ -254,8 +254,8 @@ URL: https://wiki.metacubex.one
 Architecture: aarch64_cortex-a53
 Installed-Size: 30392320
 Filename: nikki_2025.05.31~71a87056-r1_aarch64_cortex-a53.ipk
-Size: 10785310
-SHA256sum: 873ffd70fd0d15047d0ae1612843c5e7f6da2494b8eb28fcff79c10742073015
+Size: 10784890
+SHA256sum: 4e2cff0d16230867bc06b8930c5b94d3e9ffb8aed366b9a92a9fc5a34615f3d8
 Description:  A rule based proxy in Go.
 
 Package: tcping
@@ -267,7 +267,7 @@ URL: https://github.com/jlyo/tcping
 Architecture: aarch64_cortex-a53
 Installed-Size: 71680
 Filename: tcping_0.3-r1_aarch64_cortex-a53.ipk
-Size: 4319
-SHA256sum: b0322c7cab290189ed11a6fc5962a2d85b9f83a41a0dddc537708d338e57f2f6
+Size: 4322
+SHA256sum: e74fbb4849fd96dcda45f0b4bb8686965279a95adff5a5e7b01cb0bbb8ce57e6
 Description:  tcping measures the latency of a tcp-connection
 
