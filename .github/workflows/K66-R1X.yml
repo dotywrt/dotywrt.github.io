@@ -20,7 +20,7 @@ jobs:
           curl -fsSL https://raw.githubusercontent.com/dotywrt/dotywrt.github.io/refs/heads/main/scripts/ipkg-make-index.py -o scripts/ipkg-make-index.py
           chmod +x scripts/ipkg-make-index.py
 
-      - name: Debug: List .ipk files
+      - name: Debug Ipk
         run: |
           echo "Checking .ipk files in feed dir:"
           find openwrt/24.10/k66-r1x/packages -name '*.ipk' -ls
