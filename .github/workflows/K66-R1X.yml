@@ -22,7 +22,7 @@ jobs:
           sudo apt update
           sudo apt install -y opkg-utils
 
-      - name: Debug: List .ipk files
+      - name: Debug List .ipk files
         run: |
           echo "Listing .ipk files in openwrt/24.10/k66-r1x/packages:"
           find openwrt/24.10/k66-r1x/packages -name '*.ipk' -ls
