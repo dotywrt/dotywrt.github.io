@@ -17,7 +17,7 @@ jobs:
       - name: Download OpenWrt ipkg-make-index.sh
         run: |
           mkdir -p scripts
-          curl -fsSL https://raw.githubusercontent.com/openwrt/openwrt/master/scripts/ipkg-make-index.sh \
+          curl -fsSL https://raw.githubusercontent.com/dotywrt/dotywrt.github.io/refs/heads/main/scripts/ipkg-make-index.sh \
             -o scripts/ipkg-make-index.sh
           sed -i 's/\bsha256\b/sha256sum/g' scripts/ipkg-make-index.sh
           chmod +x scripts/ipkg-make-index.sh
