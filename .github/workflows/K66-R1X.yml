@@ -8,31 +8,35 @@ on:
 
 jobs:
   regen-packages:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download custom ipkg-make-index.py
-        run: |
-          mkdir -p scripts
-          curl -fsSL https://raw.githubusercontent.com/dotywrt/dotywrt.github.io/refs/heads/main/scripts/ipkg-make-index.py -o scripts/ipkg-make-index.py
-          chmod +x scripts/ipkg-make-index.py
+      - name: Check Ubuntu version
+        run: lsb_release -a
 
-      - name: Debug Ipk
+      - name: Install opkg-utils
         run: |
-          echo "Checking .ipk files in feed dir:"
+          sudo apt update
+          sudo apt install -y opkg-utils
+
+      - name: Debug: List .ipk files
+        run: |
+          echo "Listing .ipk files in openwrt/24.10/k66-r1x/packages:"
           find openwrt/24.10/k66-r1x/packages -name '*.ipk' -ls
 
       - name: Generate Packages and Packages.gz
         run: |
-          python3 scripts/ipkg-make-index.py openwrt/24.10/k66-r1x/packages > openwrt/24.10/k66-r1x/packages/Packages
-          gzip -kf openwrt/24.10/k66-r1x/packages/Packages
-          echo "Generated Packages:"
-          head openwrt/24.10/k66-r1x/packages/Packages || echo "(Empty)"
+          cd openwrt/24.10/k66-r1x/packages
+          opkg-make-index . > Packages
+          gzip -kf Packages
+          echo "---- Packages content preview ----"
+          head Packages || echo "(Packages is empty)"
+          echo "----------------------------------"
 
-      - name: Commit & Push
+      - name: Commit and push updated index
         run: |
           git config user.name "GitHub Actions"
           git config user.email "action@github.com"
