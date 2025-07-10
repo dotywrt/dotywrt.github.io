@@ -12,26 +12,32 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      - name: Checkout
+      - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Make script executable
-        run: chmod +x scripts/ipkg-make-index.sh
-
-      - name: Generate Packages and Packages.gz
+      - name: Ensure Tools Are Installed
         run: |
+          sudo apt-get update
+          sudo apt-get install -y binutils gzip xz-utils
+
+      - name: Make Index
+        run: |
+          chmod +x scripts/ipkg-make-index.sh
           scripts/ipkg-make-index.sh openwrt/24.10/k66-r1x/packages > openwrt/24.10/k66-r1x/packages/Packages
           gzip -kf openwrt/24.10/k66-r1x/packages/Packages
 
-      - name: Show preview of Packages file
+      - name: Preview Packages file
         run: |
-          echo "📦 Preview of Packages:"
-          head openwrt/24.10/k66-r1x/packages/Packages || echo "(Packages file empty)"
+          echo "Preview Packages:"
+          head openwrt/24.10/k66-r1x/packages/Packages || echo "(Empty)"
+          echo
+          echo "Preview Packages.gz:"
+          zcat openwrt/24.10/k66-r1x/packages/Packages.gz | head || echo "(Empty)"
 
       - name: Commit & Push
         run: |
           git config user.name "GitHub Actions"
           git config user.email "action@github.com"
           git add openwrt/24.10/k66-r1x/packages/Packages*
-          git commit -m "🔄 Update Packages index" || echo "No changes to commit"
+          git commit -m "🔄 Update Packages index" || echo "Nothing to commit"
           git push
