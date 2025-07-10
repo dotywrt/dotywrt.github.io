@@ -22,9 +22,8 @@ jobs:
 
       - name: Generate Packages and Packages.gz
         run: |
-          cd openwrt/24.10/k66-r1x/packages
-          python3 ../../../scripts/ipkg-make-index.py . > Packages
-          gzip -kf Packages
+          python3 scripts/ipkg-make-index.py openwrt/24.10/k66-r1x/packages > openwrt/24.10/k66-r1x/packages/Packages
+          gzip -kf openwrt/24.10/k66-r1x/packages/Packages
 
       - name: Commit & Push
         run: |
