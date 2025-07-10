@@ -17,7 +17,7 @@ jobs:
       - name: Download OpenWrt index script
         run: |
           mkdir -p scripts
-          curl -sL https://raw.githubusercontent.com/dotywrt/dotywrt.github.io/refs/heads/main/scripts/ipkg-make-index.py -o scripts/ipkg-make-index.py
+          curl -fsSL https://raw.githubusercontent.com/openwrt/openwrt/master/scripts/ipkg-make-index.py -o scripts/ipkg-make-index.py
           chmod +x scripts/ipkg-make-index.py
 
       - name: Generate Packages and Packages.gz
@@ -29,6 +29,6 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "action@github.com"
-          git add Packages Packages.gz
-          git commit -m "Update Packages index"
+          git add openwrt/24.10/k66-r1x/packages/Packages*
+          git commit -m "Update Packages index" || echo "No changes to commit"
           git push
