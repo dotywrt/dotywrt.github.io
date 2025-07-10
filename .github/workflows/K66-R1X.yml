@@ -17,13 +17,19 @@ jobs:
       - name: Download OpenWrt index script
         run: |
           mkdir -p scripts
-          curl -fsSL https://raw.githubusercontent.com/dotywrt/dotywrt.github.io/refs/heads/main/scripts/ipkg-make-index.py -o scripts/ipkg-make-index.py
+          curl -fsSL https://raw.githubusercontent.com/openwrt/openwrt/master/scripts/ipkg-make-index.py -o scripts/ipkg-make-index.py
           chmod +x scripts/ipkg-make-index.py
+
+      - name: Show .ipk files (debug)
+        run: |
+          echo "Listing .ipk files:"
+          find openwrt/24.10/k66-r1x/packages -name '*.ipk' -ls
 
       - name: Generate Packages and Packages.gz
         run: |
           python3 scripts/ipkg-make-index.py openwrt/24.10/k66-r1x/packages > openwrt/24.10/k66-r1x/packages/Packages
           gzip -kf openwrt/24.10/k66-r1x/packages/Packages
+          cat openwrt/24.10/k66-r1x/packages/Packages  # show content for debug
 
       - name: Commit & Push
         run: |
