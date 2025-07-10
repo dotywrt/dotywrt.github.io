@@ -14,26 +14,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Fetch opkg-make-index.sh from OpenWrt
+      - name: Download OpenWrt ipkg-make-index.sh
         run: |
           mkdir -p scripts
-          curl -fsSL https://raw.githubusercontent.com/openwrt/openwrt/master/scripts/ipkg-make-index.sh -o scripts/ipkg-make-index.sh
+          curl -fsSL https://raw.githubusercontent.com/openwrt/openwrt/master/scripts/ipkg-make-index.sh \
+            -o scripts/ipkg-make-index.sh
           chmod +x scripts/ipkg-make-index.sh
 
       - name: List .ipk files
         run: |
-          echo "Listing .ipk files:"
+          echo "Listing .ipk files in feed dir:"
           find openwrt/24.10/k66-r1x/packages -name '*.ipk' -ls
 
       - name: Generate Packages and Packages.gz
         run: |
-          cd openwrt/24.10/k66-r1x/packages
-          bash ../../../scripts/ipkg-make-index.sh . > Packages
-          gzip -kf Packages
-          echo "Preview of Packages:"
-          head Packages || echo "(Packages empty)"
+          scripts/ipkg-make-index.sh openwrt/24.10/k66-r1x/packages > openwrt/24.10/k66-r1x/packages/Packages
+          gzip -kf openwrt/24.10/k66-r1x/packages/Packages
+          echo "Preview of Packages file:"
+          head openwrt/24.10/k66-r1x/packages/Packages || echo "(Packages file empty)"
 
-      - name: Commit and push updated index
+      - name: Commit and push Packages index
         run: |
           git config user.name "GitHub Actions"
           git config user.email "action@github.com"
