@@ -11,7 +11,7 @@ def extract_control_data(ipk_path):
         with open(ipk_path, 'rb') as f:
             ar_data = f.read()
 
-        # Skip debian-binary and data.tar.* files, extract control.tar.gz
+        # Find control.tar.gz or control.tar.xz inside .ipk
         control_start = ar_data.find(b'control.tar')
         if control_start < 0:
             return None
@@ -23,7 +23,7 @@ def extract_control_data(ipk_path):
         gz_io = io.BytesIO(ar_data[gz_start:])
         with gzip.GzipFile(fileobj=gz_io) as gz:
             with tarfile.open(fileobj=io.BytesIO(gz.read())) as tar:
-                control = tar.extractfile('./control')
+                control = tar.extractfile('control')  # <-- FIXED HERE
                 if control is None:
                     return None
                 return control.read().decode('utf-8')
