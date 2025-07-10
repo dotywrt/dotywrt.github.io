@@ -14,27 +14,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check Ubuntu version
-        run: lsb_release -a
-
-      - name: Install opkg-utils
+      - name: Fetch opkg-make-index.sh from OpenWrt
         run: |
-          sudo apt update
-          sudo apt install -y opkg-utils
+          mkdir -p scripts
+          curl -fsSL https://raw.githubusercontent.com/openwrt/openwrt/master/scripts/ipkg-make-index.sh -o scripts/ipkg-make-index.sh
+          chmod +x scripts/ipkg-make-index.sh
 
-      - name: Debug List .ipk files
+      - name: List .ipk files
         run: |
-          echo "Listing .ipk files in openwrt/24.10/k66-r1x/packages:"
+          echo "Listing .ipk files:"
           find openwrt/24.10/k66-r1x/packages -name '*.ipk' -ls
 
       - name: Generate Packages and Packages.gz
         run: |
           cd openwrt/24.10/k66-r1x/packages
-          opkg-make-index . > Packages
+          bash ../../../scripts/ipkg-make-index.sh . > Packages
           gzip -kf Packages
-          echo "---- Packages content preview ----"
-          head Packages || echo "(Packages is empty)"
-          echo "----------------------------------"
+          echo "Preview of Packages:"
+          head Packages || echo "(Packages empty)"
 
       - name: Commit and push updated index
         run: |
