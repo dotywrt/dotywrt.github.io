@@ -1,7 +1,7 @@
-name: K66-R1X
+name: K66_R1X
 
 on:
-  workflow_dispatch:  # manual trigger
+  workflow_dispatch:
   push:
     paths:
       - 'openwrt/24.10/k66-r1x/packages/*.ipk'
@@ -13,6 +13,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Install opkg-utils
+        run: sudo apt update && sudo apt install -y opkg-utils
 
       - name: Generate Packages and Packages.gz
         run: |
