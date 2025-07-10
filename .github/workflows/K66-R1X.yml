@@ -1,4 +1,4 @@
-name: K66_R1X
+name: Rebuild Package Index
 
 on:
   workflow_dispatch:
@@ -14,13 +14,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install opkg-utils
-        run: sudo apt update && sudo apt install -y opkg-utils
+      - name: Download OpenWrt index script
+        run: |
+          mkdir -p scripts
+          curl -sL https://raw.githubusercontent.com/openwrt/openwrt/master/scripts/ipkg-make-index.py -o scripts/ipkg-make-index.py
+          chmod +x scripts/ipkg-make-index.py
 
       - name: Generate Packages and Packages.gz
         run: |
           cd openwrt/24.10/k66-r1x/packages
-          opkg-make-index . > Packages
+          python3 ../../../scripts/ipkg-make-index.py . > Packages
           gzip -kf Packages
 
       - name: Commit & Push
