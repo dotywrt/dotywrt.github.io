@@ -28,6 +28,16 @@ jobs:
           echo "Listing .ipk files in feed dir:"
           find openwrt/24.10/k66-r1x/packages -name '*.ipk' -ls
 
+      - name: Check structure of all .ipk files
+        run: |
+          echo "🔍 Listing contents of each .ipk file using ar t:"
+          for ipk in openwrt/24.10/k66-r1x/packages/*.ipk; do
+            echo
+            echo "🧩 $ipk"
+            ar t "$ipk" || echo "❌ Failed to read $ipk"
+          done
+
+
       - name: Generate Packages and Packages.gz
         run: |
           scripts/ipkg-make-index.sh openwrt/24.10/k66-r1x/packages > openwrt/24.10/k66-r1x/packages/Packages
