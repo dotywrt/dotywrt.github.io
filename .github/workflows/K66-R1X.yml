@@ -17,7 +17,7 @@ jobs:
       - name: Download OpenWrt index script
         run: |
           mkdir -p scripts
-          curl -fsSL https://raw.githubusercontent.com/openwrt/openwrt/master/scripts/ipkg-make-index.py -o scripts/ipkg-make-index.py
+          curl -fsSL https://raw.githubusercontent.com/dotywrt/dotywrt.github.io/refs/heads/main/scripts/ipkg-make-index.py -o scripts/ipkg-make-index.py
           chmod +x scripts/ipkg-make-index.py
 
       - name: Generate Packages and Packages.gz
