@@ -19,7 +19,9 @@ jobs:
           mkdir -p scripts
           curl -fsSL https://raw.githubusercontent.com/openwrt/openwrt/master/scripts/ipkg-make-index.sh \
             -o scripts/ipkg-make-index.sh
+          sed -i 's/\bsha256\b/sha256sum/g' scripts/ipkg-make-index.sh
           chmod +x scripts/ipkg-make-index.sh
+
 
       - name: List .ipk files
         run: |
