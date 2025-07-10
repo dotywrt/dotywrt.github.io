@@ -10,9 +10,8 @@ for pkg in "$pkg_dir"/*.ipk; do
 	[ -f "$pkg" ] || continue
 	echo "Generating index for package $pkg" >&2
 
-	# Try to extract control file from control.tar.gz or control.tar.xz
-	control_data=$(ar p "$pkg" control.tar.gz 2>/dev/null | tar xO ./control 2>/dev/null || \
-	               ar p "$pkg" control.tar.xz 2>/dev/null | xzcat | tar xO ./control 2>/dev/null)
+	# Paksa guna control.tar.gz sahaja
+	control_data=$(ar p "$pkg" control.tar.gz 2>/dev/null | tar xzO ./control 2>/dev/null)
 
 	if [ -z "$control_data" ]; then
 		echo "Warning: Failed to extract control for $pkg" >&2
