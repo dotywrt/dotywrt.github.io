@@ -1,0 +1,29 @@
+name: K66-R1X
+
+on:
+  workflow_dispatch:  # manual trigger
+  push:
+    paths:
+      - 'openwrt/24.10/k66-r1x/packages/*.ipk'
+
+jobs:
+  regen-packages:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate Packages and Packages.gz
+        run: |
+          cd openwrt/24.10/k66-r1x/packages
+          opkg-make-index . > Packages
+          gzip -kf Packages
+
+      - name: Commit & Push
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "action@github.com"
+          git add Packages Packages.gz
+          git commit -m "Update Packages index"
+          git push
