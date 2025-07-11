@@ -8,7 +8,6 @@ jobs:
     runs-on: ubuntu-22.04
 
     env:
-      PROFILE: aw1000
       TARGET: qualcommax
       SUBTARGET: ipq807x
       BUILD_DIR: openwrt-imagebuilder-24.10.0-qualcommax-ipq807x.Linux-x86_64
@@ -34,10 +33,18 @@ jobs:
           mkdir -p $BUILD_DIR/files
           cp -r temp-packages/* $BUILD_DIR/files/
 
-      - name: Build dummy firmware to trigger package compile
+      - name: Create .config for AW1000 target
         run: |
           cd $BUILD_DIR
-          make image PROFILE=$PROFILE FILES=files/ PACKAGES=""
+          echo "CONFIG_TARGET_qualcommax=y" > .config
+          echo "CONFIG_TARGET_qualcommax_ipq807x=y" >> .config
+          echo "CONFIG_TARGET_qualcommax_ipq807x_DEVICE_arcadyan_aw1000=y" >> .config
+          make defconfig
+
+      - name: Build dummy firmware to compile packages
+        run: |
+          cd $BUILD_DIR
+          make image FILES=files/ PACKAGES=""
 
       - name: Copy compiled IPK files
         run: |
