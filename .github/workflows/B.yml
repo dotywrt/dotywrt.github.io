@@ -1,57 +1,83 @@
-name: Build all packages for AW1000 (qualcommax/ipq807x)
+name: Build IPK + Firmware for AW1000
 
 on:
   workflow_dispatch:
 
 jobs:
-  build-ipk:
+  build:
     runs-on: ubuntu-22.04
 
     env:
       TARGET: qualcommax
       SUBTARGET: ipq807x
+      PROFILE: arcadyan_aw1000
+      SDK_DIR: openwrt-sdk-24.10.0-qualcommax-ipq807x_gcc-13.3.0_musl.Linux-x86_64
       BUILD_DIR: openwrt-imagebuilder-24.10.0-qualcommax-ipq807x.Linux-x86_64
       OUT_DIR: openwrt/24.10/k66-r1x/packages
 
     steps:
-      - name: Checkout current repo
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Install build dependencies
+      - name: Install dependencies
         run: |
           sudo apt update
           sudo apt install -y build-essential libncurses5-dev zlib1g-dev gawk git wget unzip python3 tar gzip xz-utils zstd
 
-      - name: Download and extract ImageBuilder
+      # --- SDK SECTION ---
+      - name: Download OpenWrt SDK (GCC 13.3.0)
         run: |
-          wget https://downloads.openwrt.org/releases/24.10.0/targets/qualcommax/ipq807x/openwrt-imagebuilder-24.10.0-qualcommax-ipq807x.Linux-x86_64.tar.zst
-          tar --use-compress-program=unzstd -xf openwrt-imagebuilder-24.10.0-qualcommax-ipq807x.Linux-x86_64.tar.zst
+          wget https://downloads.openwrt.org/releases/24.10.0/targets/${{ env.TARGET }}/${{ env.SUBTARGET }}/openwrt-sdk-24.10.0-${{ env.TARGET }}-${{ env.SUBTARGET }}_gcc-13.3.0_musl.Linux-x86_64.tar.zst
+          tar --use-compress-program=unzstd -xf openwrt-sdk-24.10.0-${{ env.TARGET }}-${{ env.SUBTARGET }}_gcc-13.3.0_musl.Linux-x86_64.tar.zst
 
-      - name: Clone all packages from dotywrt/owrt-packages
+      - name: Prepare SDK & compile packages
         run: |
-          git clone --depth=1 https://github.com/dotywrt/owrt-packages temp-packages
-          mkdir -p $BUILD_DIR/files
-          cp -r temp-packages/* $BUILD_DIR/files/
-
-      - name: Create .config for AW1000 target
-        run: |
-          cd $BUILD_DIR
-          echo "CONFIG_TARGET_qualcommax=y" > .config
-          echo "CONFIG_TARGET_qualcommax_ipq807x=y" >> .config
-          echo "CONFIG_TARGET_qualcommax_ipq807x_DEVICE_arcadyan_aw1000=y" >> .config
+          cd $SDK_DIR
+          echo "CONFIG_TARGET_${TARGET}=y" > .config
+          echo "CONFIG_TARGET_${TARGET}_${SUBTARGET}=y" >> .config
+          echo "CONFIG_TARGET_${TARGET}_${SUBTARGET}_DEVICE_${PROFILE}=y" >> .config
           make defconfig
 
-      - name: Build dummy firmware to compile packages
+          git clone --depth=1 https://github.com/dotywrt/owrt-packages temp-packages
+
+          for dir in temp-packages/luci-app-*; do
+            appname=$(basename "$dir")
+            ln -s ../../$dir package/$appname
+          done
+
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+          
+          make package/luci-app-*/compile -j$(nproc) V=s
+
+      - name: Copy compiled IPK to workspace
+        run: |
+          mkdir -p ipk_out
+          find $SDK_DIR/bin/packages/ -name "*.ipk" -exec cp {} ipk_out/ \;
+
+      # --- IMAGEBUILDER SECTION ---
+      - name: Download OpenWrt ImageBuilder
+        run: |
+          wget https://downloads.openwrt.org/releases/24.10.0/targets/${{ env.TARGET }}/${{ env.SUBTARGET }}/openwrt-imagebuilder-24.10.0-${{ env.TARGET }}-${{ env.SUBTARGET }}.Linux-x86_64.tar.zst
+          tar --use-compress-program=unzstd -xf openwrt-imagebuilder-24.10.0-${{ env.TARGET }}-${{ env.SUBTARGET }}.Linux-x86_64.tar.zst
+
+      - name: Inject packages and build firmware
         run: |
           cd $BUILD_DIR
-          make image FILES=files/ PACKAGES=""
+          mkdir -p packages
+          cp ../ipk_out/*.ipk packages/
 
-      - name: Copy compiled IPK files
+          make image PROFILE="${PROFILE}" PACKAGES="" FILES="files/"
+
+      # --- OUTPUT SECTION ---
+      - name: Copy firmware and IPK to output
         run: |
           mkdir -p $OUT_DIR
-          find $BUILD_DIR/bin/packages/ -name "*.ipk" -exec cp {} $OUT_DIR/ \;
+          cp -v $BUILD_DIR/bin/targets/${{ env.TARGET }}/${{ env.SUBTARGET }}/*.bin $OUT_DIR/ || true
+          cp -v $BUILD_DIR/bin/targets/${{ env.TARGET }}/${{ env.SUBTARGET }}/*.img $OUT_DIR/ || true
+          cp -v ipk_out/*.ipk $OUT_DIR/
 
-      - name: Generate Packages and Packages.gz
+      - name: Generate Packages index
         run: |
           cd $OUT_DIR
           rm -f Packages Packages.gz Packages.manifest Packages.index.gz
@@ -59,10 +85,13 @@ jobs:
           cp Packages.manifest Packages
           gzip -k Packages
 
-      - name: Commit and push Packages index
+      - name: Commit and push
         run: |
           git config user.name "GitHub Actions"
           git config user.email "action@github.com"
           git add $OUT_DIR/Packages*
-          git commit -m "Update Packages index" || echo "No changes to commit"
+          git add $OUT_DIR/*.ipk || true
+          git add $OUT_DIR/*.bin || true
+          git add $OUT_DIR/*.img || true
+          git commit -m "Build IPK & firmware for $PROFILE" || echo "No changes"
           git push
