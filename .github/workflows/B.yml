@@ -26,10 +26,11 @@ jobs:
 
       - name: Download ImageBuilder
         run: |
-          wget ${REPO_URL}/openwrt-imagebuilder-${TARGET}-${SUBTARGET}.Linux-x86_64.tar.xz
-          tar -Jxf openwrt-imagebuilder-${TARGET}-${SUBTARGET}.Linux-x86_64.tar.xz
+          wget ${REPO_URL}/openwrt-imagebuilder-${TARGET}-${SUBTARGET}.Linux-x86_64.tar.zst
+          zstd -d openwrt-imagebuilder-${TARGET}-${SUBTARGET}.Linux-x86_64.tar.zst
+          tar -xf openwrt-imagebuilder-${TARGET}-${SUBTARGET}.Linux-x86_64.tar
           mv openwrt-imagebuilder-* $BUILD_DIR
-
+          
       - name: Clone all packages from dotywrt/owrt-packages
         run: |
           git clone --depth=1 https://github.com/dotywrt/owrt-packages temp-packages
