@@ -30,7 +30,7 @@ jobs:
           wget https://downloads.openwrt.org/releases/24.10.0/targets/${{ env.TARGET }}/${{ env.SUBTARGET }}/openwrt-sdk-24.10.0-${{ env.TARGET }}-${{ env.SUBTARGET }}_gcc-13.3.0_musl.Linux-x86_64.tar.zst
           tar --use-compress-program=unzstd -xf openwrt-sdk-24.10.0-${{ env.TARGET }}-${{ env.SUBTARGET }}_gcc-13.3.0_musl.Linux-x86_64.tar.zst
 
-      - name: Prepare SDK & compile packages
+      - name: Prepare SDK config and feeds
         run: |
           cd $SDK_DIR
           echo "CONFIG_TARGET_${TARGET}=y" > .config
@@ -38,17 +38,30 @@ jobs:
           echo "CONFIG_TARGET_${TARGET}_${SUBTARGET}_DEVICE_${PROFILE}=y" >> .config
           make defconfig
 
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+
+      - name: Clone and symlink custom packages
+        run: |
+          cd $SDK_DIR
           git clone --depth=1 https://github.com/dotywrt/owrt-packages temp-packages
 
           for dir in temp-packages/luci-app-*; do
+            [ -d "$dir" ] || continue
             appname=$(basename "$dir")
+            echo "Symlinking $appname"
             ln -s ../../$dir package/$appname
           done
 
-          ./scripts/feeds update -a
-          ./scripts/feeds install -a
-          
-          make package/luci-app-*/compile -j$(nproc) V=s
+      - name: Compile luci-app-* packages
+        run: |
+          cd $SDK_DIR
+          for dir in package/luci-app-*; do
+            [ -d "$dir" ] || continue
+            app=$(basename "$dir")
+            echo "➡️ Building $app ..."
+            make package/$app/compile V=s || exit 1
+          done
 
       - name: Copy compiled IPK to workspace
         run: |
@@ -66,30 +79,20 @@ jobs:
           cd $BUILD_DIR
           mkdir -p packages
           cp ../ipk_out/*.ipk packages/
-
+          mkdir -p files  # Add your custom files here if needed
           make image PROFILE="${PROFILE}" PACKAGES="" FILES="files/"
 
       # --- OUTPUT SECTION ---
       - name: Copy firmware and IPK to output
         run: |
           mkdir -p $OUT_DIR
-          cp -v $BUILD_DIR/bin/targets/${{ env.TARGET }}/${{ env.SUBTARGET }}/*.bin $OUT_DIR/ || true
-          cp -v $BUILD_DIR/bin/targets/${{ env.TARGET }}/${{ env.SUBTARGET }}/*.img $OUT_DIR/ || true
+          cp -v $BUILD_DIR/bin/targets/${{ env.TARGET }}/${{ env.SUBTARGET }}/*.{bin,img} $OUT_DIR/ || true
           cp -v ipk_out/*.ipk $OUT_DIR/
-
-      - name: Generate Packages index
-        run: |
-          cd $OUT_DIR
-          rm -f Packages Packages.gz Packages.manifest Packages.index.gz
-          opkg-make-index . > Packages.manifest
-          cp Packages.manifest Packages
-          gzip -k Packages
 
       - name: Commit and push
         run: |
           git config user.name "GitHub Actions"
           git config user.email "action@github.com"
-          git add $OUT_DIR/Packages*
           git add $OUT_DIR/*.ipk || true
           git add $OUT_DIR/*.bin || true
           git add $OUT_DIR/*.img || true
