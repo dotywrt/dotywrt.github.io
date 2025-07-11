@@ -31,13 +31,13 @@ jobs:
       - name: Clone all packages from dotywrt/owrt-packages
         run: |
           git clone --depth=1 https://github.com/dotywrt/owrt-packages temp-packages
-          mkdir -p $BUILD_DIR/package/custom
-          cp -r temp-packages/* $BUILD_DIR/package/custom/
+          mkdir -p $BUILD_DIR/files
+          cp -r temp-packages/* $BUILD_DIR/files/
 
-      - name: Build all custom packages
+      - name: Build dummy firmware to trigger package compile
         run: |
           cd $BUILD_DIR
-          make package/custom/compile V=s IGNORE_ERRORS=n
+          make image PROFILE=$PROFILE FILES=files/ PACKAGES=""
 
       - name: Copy compiled IPK files
         run: |
