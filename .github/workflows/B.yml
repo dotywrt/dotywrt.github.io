@@ -1,0 +1,69 @@
+name: Build all packages for AW1000 (qualcommax/ipq807x)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-ipk:
+    runs-on: ubuntu-22.04
+
+    env:
+      PROFILE: aw1000
+      TARGET: qualcommax
+      SUBTARGET: ipq807x
+      REPO_URL: https://downloads.openwrt.org/releases/24.10.0/targets/qualcommax/ipq807x
+      BUILD_DIR: builder
+      OUT_DIR: openwrt/24.10/k66-r1x/packages
+
+    steps:
+      - name: Checkout current repo
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential libncurses5-dev zlib1g-dev gawk git wget unzip python3 tar gzip xz-utils
+
+      - name: Download ImageBuilder
+        run: |
+          wget ${REPO_URL}/openwrt-imagebuilder-${TARGET}-${SUBTARGET}.Linux-x86_64.tar.xz
+          tar -Jxf openwrt-imagebuilder-${TARGET}-${SUBTARGET}.Linux-x86_64.tar.xz
+          mv openwrt-imagebuilder-* $BUILD_DIR
+
+      - name: Clone all packages from dotywrt/owrt-packages
+        run: |
+          git clone --depth=1 https://github.com/dotywrt/owrt-packages temp-packages
+          mkdir -p $BUILD_DIR/package/custom
+          cp -r temp-packages/* $BUILD_DIR/package/custom/
+
+      - name: Build all custom packages
+        run: |
+          cd $BUILD_DIR
+          make package/custom/compile V=s
+
+      - name: Copy compiled IPK files
+        run: |
+          mkdir -p $OUT_DIR
+          find $BUILD_DIR/bin/packages/ -name "*.ipk" -exec cp {} $OUT_DIR/ \;
+
+      - name: Generate Packages and Packages.gz
+        run: |
+          cd $OUT_DIR
+          rm -f Packages Packages.gz
+          for ipk in *.ipk; do
+            echo "Generating for $ipk"
+            ar p "$ipk" control.tar.gz | tar xzOf - ./control >> Packages || echo "⚠️ $ipk missing control"
+            echo "Filename: $ipk" >> Packages
+            echo "Size: $(stat -c %s "$ipk")" >> Packages
+            echo "SHA256sum: $(sha256sum "$ipk" | awk '{print $1}')" >> Packages
+            echo "" >> Packages
+          done
+          gzip -kf Packages
+
+      - name: Commit and push Packages index
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "action@github.com"
+          git add $OUT_DIR/Packages*
+          git commit -m "Update Packages index" || echo "No changes to commit"
+          git push
