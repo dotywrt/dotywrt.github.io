@@ -23,11 +23,12 @@ jobs:
           sudo apt update
           sudo apt install -y build-essential libncurses5-dev zlib1g-dev gawk git wget unzip python3 tar gzip xz-utils zstd
 
-      - name: Download ImageBuilder
+      - name: Download and extract ImageBuilder
         run: |
           wget https://downloads.openwrt.org/releases/24.10.0/targets/qualcommax/ipq807x/openwrt-imagebuilder-24.10.0-qualcommax-ipq807x.Linux-x86_64.tar.zst
           tar --use-compress-program=unzstd -xf openwrt-imagebuilder-24.10.0-qualcommax-ipq807x.Linux-x86_64.tar.zst
-          mv openwrt-imagebuilder-* $BUILD_DIR
+          mkdir -p $BUILD_DIR
+          mv openwrt-imagebuilder-24.10.0-qualcommax-ipq807x.Linux-x86_64/* $BUILD_DIR/
 
       - name: Clone all packages from dotywrt/owrt-packages
         run: |
@@ -45,19 +46,6 @@ jobs:
           mkdir -p $OUT_DIR
           find $BUILD_DIR/bin/packages/ -name "*.ipk" -exec cp {} $OUT_DIR/ \;
 
-      - name: Generate Packages and Packages.gz
-        run: |
-          cd $OUT_DIR
-          rm -f Packages Packages.gz
-          for ipk in *.ipk; do
-            echo "Generating for $ipk"
-            ar p "$ipk" control.tar.gz | tar xzOf - ./control >> Packages || echo "⚠️ $ipk missing control"
-            echo "Filename: $ipk" >> Packages
-            echo "Size: $(stat -c %s \"$ipk\")" >> Packages
-            echo "SHA256sum: $(sha256sum \"$ipk\" | awk '{print $1}')" >> Packages
-            echo "" >> Packages
-          done
-          gzip -kf Packages
 
       - name: Commit and push Packages index
         run: |
