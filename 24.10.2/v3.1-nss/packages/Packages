@@ -1,0 +1,301 @@
+Package: chinadns-ng
+Version: 2025.03.27-r1
+Depends: libc, ipset
+License: AGPL-3.0-only
+Section: net
+URL: https://github.com/zfl9/chinadns-ng
+Architecture: aarch64_cortex-a53
+Installed-Size: 501760
+Filename: chinadns-ng_2025.03.27-r1_aarch64_cortex-a53.ipk
+Size: 262970
+SHA256sum: 4d76028b4dce7f8e9915a99ccbc8f75225bbbead7524b46b2b4a9f9300a347db
+Description:  ChinaDNS next generation, refactoring with epoll and ipset.
+
+Package: dns2socks
+Version: 2.1-r2
+Depends: libc, libpthread
+License: BSD-3-Clause
+Section: net
+URL: http://dns2socks.sourceforge.net/
+Architecture: aarch64_cortex-a53
+Installed-Size: 71680
+Filename: dns2socks_2.1-r2_aarch64_cortex-a53.ipk
+Size: 12722
+SHA256sum: 6f3fe2a4d80991db8eac3e6dec1191306db44934b6869912babfe18d35b85c5c
+Description:  This is a command line utility to resolve DNS requests via
+ a SOCKS tunnel like Tor or a HTTP proxy.
+
+Package: dns2tcp
+Version: 1.1.2-r2
+Depends: libc
+License: AGPL-3.0-only
+Section: net
+URL: https://github.com/zfl9/dns2tcp
+Architecture: aarch64_cortex-a53
+Installed-Size: 71680
+Filename: dns2tcp_1.1.2-r2_aarch64_cortex-a53.ipk
+Size: 12192
+SHA256sum: 20044dbc6ae660af049c44c2d7a4f9130e99e59c2226a6c0ce41267ceff31a5b
+Description:  utility to convert dns query from udp to tcp
+
+Package: geoview
+Version: 0.1.10-r1
+Depends: libc
+License: Apache-2.0
+Section: net
+URL: https://github.com/snowie2000/geoview
+Architecture: aarch64_cortex-a53
+Installed-Size: 5509120
+Filename: geoview_0.1.10-r1_aarch64_cortex-a53.ipk
+Size: 2148944
+SHA256sum: 472f63804272a4f169b1f134fc0eb82aae93943326cb06fc76b0bd59fd5bc5f6
+Description:  geoview is a handy tool to extract useful information from geo* files.
+
+Package: luci-app-argon-config
+Version: 25.204.42842~da8502b
+Depends: libc, luci-theme-argon
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 30720
+Filename: luci-app-argon-config_25.204.42842~da8502b_all.ipk
+Size: 3967
+SHA256sum: c7647203db2aa5ae32b18ddbafb44ffa0a16588983b8a9ea505d8fce373ecbd5
+Description:  LuCI for Argon theme configuration
+
+Package: luci-app-atcommands
+Version: 1.0.9-r20241111
+Depends: libc, sms-tool
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 30720
+Filename: luci-app-atcommands_1.0.9-r20241111_all.ipk
+Size: 4003
+SHA256sum: 03b0c4c4ae267fbe9a8d30dcb20b5858a37c99e21d41499d93faee460bbebae0
+Description:  LuCI JS interface for the sms-tool. The user interface supports only AT commands.
+
+Package: luci-app-cpufreq
+Version: 25.204.42842~da8502b
+Depends: libc, cpufreq
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 20480
+Filename: luci-app-cpufreq_25.204.42842~da8502b_all.ipk
+Size: 2467
+SHA256sum: fc44e54fce3723c5ebeabdff5c22dd3e054d593fca89f45587aac7a5ac7844e0
+Description:  LuCI for CPU Freq Setting
+
+Package: luci-app-filemanager
+Version: 1.0.1-r1
+Depends: libc, luci-base
+License: Apache-2.0
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 112640
+Filename: luci-app-filemanager_1.0.1-r1_all.ipk
+Size: 21118
+SHA256sum: f8249b79886dae1133020614043b33cb38ccb0846673701ab2e333460d770abf
+Description:  LuCI File Manager module
+
+Package: luci-app-modemband
+Version: 1.0.25-r20241111
+Depends: libc, sms-tool, modemband
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 61440
+Filename: luci-app-modemband_1.0.25-r20241111_all.ipk
+Size: 7702
+SHA256sum: 1d875c026c01ce315bf4e7bd65c8209a4a145fc641d4aa3c9e940cc20bd64761
+Description:  LuCI JS interface for the modemband. The package allows set LTE/5G bands for selected 4G/5G modems.
+
+Package: luci-app-modeminfo
+Version: 1.0-r1
+Depends: libc, luci, sms-tool, kmod-usb-serial-option
+License: GPL-3.0
+Section: luci
+Architecture: all
+Installed-Size: 51200
+Filename: luci-app-modeminfo_1.0-r1_all.ipk
+Size: 10499
+SHA256sum: 8de83007ee30fd49d4a56936df8decf39f5a041b632ce41a909a80b54a2e8ba0
+Description:  This LuCI app provides modem information in a web interface.
+
+Package: luci-app-openclash
+Version: 0.46.137
+Depends: libc, dnsmasq-full, bash, curl, ca-bundle, ip-full, ruby, ruby-yaml, kmod-tun, unzip
+Section: opt
+Architecture: all
+Installed-Size: 24924160
+Filename: luci-app-openclash_0.46.137_all.ipk
+Size: 9236932
+SHA256sum: 3fd0106dacfeadbe40ee4081d246871b69dca18eb4599cb2f162b5d511e8821b
+Description:  A LuCI support for clash
+
+Package: luci-app-passwall2
+Version: 25.4.11-r1
+Depends: libc, coreutils, coreutils-base64, coreutils-nohup, curl, ip-full, libuci-lua, lua, luci-compat, luci-lib-jsonc, resolveip, tcping, xray-core, geoview, v2ray-geoip, v2ray-geosite, unzip, luci-lua-runtime
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 860160
+Filename: luci-app-passwall2_25.4.11-r1_all.ipk
+Size: 235807
+SHA256sum: 1abefba40cd55adb3b17f594c3fa0e467669ece1306fed9a0f1ff8c22513f9c7
+Description:  LuCI support for PassWall 2
+
+Package: luci-app-passwall
+Version: 4.66-8
+Depends: libc, coreutils, coreutils-base64, coreutils-nohup, curl, chinadns-ng, dns2socks, dns2tcp, ip-full, libuci-lua, lua, luci-compat, luci-lib-jsonc, microsocks, resolveip, tcping, unzip, haproxy, trojan-plus, v2ray-core, xray-core, luci-lua-runtime
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 2478080
+Filename: luci-app-passwall_4.66-8_all.ipk
+Size: 960582
+SHA256sum: 3b271abefd34dbdb9d24f7a34932c159f6c6a183ea877118ced1533e95add643
+Description:  LuCI support for PassWall
+
+Package: luci-app-ramfree
+Version: 1.0-r1
+Depends: libc, luci-lua-runtime
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 10240
+Filename: luci-app-ramfree_1.0-r1_all.ipk
+Size: 1435
+SHA256sum: c5f47a359cf3bae346dde594cbda9fa796f83ab305b2d83f5f2943c4b123d8f2
+Description:  luci-app-ramfree
+
+Package: luci-app-sms-tool-js
+Version: 2.0.24-r20241111
+Depends: libc, sms-tool, kmod-usb-serial, kmod-usb-serial-option, comgt
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 92160
+Filename: luci-app-sms-tool-js_2.0.24-r20241111_all.ipk
+Size: 23888
+SHA256sum: 723b57dca339e216aeba577cb5db79d4c67d4cbab118cd2000cfebd1f602a29c
+Description:  LuCI JS interface for the sms-tool. The user interface supports SMS / USSD Codes / AT Commands.
+
+Package: luci-app-tailscale
+Version: 1.2.6-r1
+Depends: libc, tailscale
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 51200
+Filename: luci-app-tailscale_1.2.6-r1_all.ipk
+Size: 9783
+SHA256sum: 3af7b2be3a268531b4d416b869cd23f899d4d1925ee7fcd267c504c0da30685e
+Description:  LuCI for Tailscale
+
+Package: luci-theme-argon
+Version: 2.3.2-r20250207
+Depends: libc, wget, jsonfilter, luci-lua-runtime
+Section: luci
+URL: https://github.com/openwrt/luci
+Architecture: all
+Installed-Size: 768000
+Filename: luci-theme-argon_2.3.2-r20250207_all.ipk
+Size: 391313
+SHA256sum: cdb1cd0530c2d24b24f825514386060f85e2b7d8aab76ee9cf601cbb88b915dc
+Description:  Argon Theme
+
+Package: microsocks
+Version: 1.0.5-r1
+Depends: libc, libpthread
+License: MIT
+Section: net
+URL: https://github.com/rofl0r/microsocks
+Architecture: aarch64_cortex-a53
+Installed-Size: 71680
+Filename: microsocks_1.0.5-r1_aarch64_cortex-a53.ipk
+Size: 7520
+SHA256sum: 003ea86835ff0ca95f88f3feeebf648a74b8c83624022b1b9d14bb079ef225d8
+Description:  A SOCKS5 service that you can run on your remote boxes to tunnel connections
+ through them, if for some reason SSH doesn't cut it for you.
+
+Package: modemband
+Version: 20240616-r1
+Depends: libc, sms-tool
+License: MIT
+Section: net
+Architecture: all
+Installed-Size: 71680
+Filename: modemband_20240616-r1_all.ipk
+Size: 7538
+SHA256sum: 12463b10093e2177f4f076eba5bec7a228dae56736e35fd0be868ca4dfb8ed64
+Description:  Setting LTE/5G bands for selected modems
+
+Package: sing-box
+Version: 1.11.13-r1
+Depends: libc, ca-bundle, kmod-inet-diag, kmod-netlink-diag, kmod-tun
+License: GPL-3.0-or-later
+Section: net
+URL: https://sing-box.sagernet.org
+Architecture: aarch64_cortex-a53
+Installed-Size: 29900800
+Filename: sing-box_1.11.13-r1_aarch64_cortex-a53.ipk
+Size: 10589658
+SHA256sum: 10c75b3f0f118a3ab58dcf340bca193bb4821234b9cbf9e6e970d91ed2b7a5dc
+Description:  Sing-box is a universal proxy platform which supports hysteria, SOCKS,
+ Shadowsocks, ShadowTLS, Tor, trojan, VLess, VMess, WireGuard and so on.
+
+Package: tcping
+Version: 0.3-r1
+Depends: libc
+License: GPL-2.0-only
+Section: net
+URL: https://github.com/jlyo/tcping
+Architecture: aarch64_cortex-a53
+Installed-Size: 71680
+Filename: tcping_0.3-r1_aarch64_cortex-a53.ipk
+Size: 4315
+SHA256sum: 759eee03476263b5ff4ad3bf93e74fabb700c806316c210011d6ba8bd939f153
+Description:  tcping measures the latency of a tcp-connection
+
+Package: trojan-plus
+Version: 10.0.3-r2
+Depends: libc, libpthread, libstdcpp6, libopenssl3, boost, boost-system, boost-program_options
+License: GPL-3.0
+Section: net
+URL: https://github.com/Trojan-Plus-Group/trojan-plus
+Architecture: aarch64_cortex-a53
+Installed-Size: 993280
+Filename: trojan-plus_10.0.3-r2_aarch64_cortex-a53.ipk
+Size: 410793
+SHA256sum: 885c5b275403fb94a73a0d443b918654cff38f1555b57670fee217d95e99eccf
+Description:  An unidentifiable mechanism that helps you bypass GFW. It's compatible with original trojan with experimental features.
+
+Package: v2ray-geoip
+Version: 202506050146.1
+Depends: libc
+License: CC-BY-SA-4.0
+Section: net
+URL: https://www.v2fly.org
+Architecture: all
+Installed-Size: 19927040
+Filename: v2ray-geoip_202506050146.1_all.ipk
+Size: 3763828
+SHA256sum: 694491e81c2049582bcbcc17223316bb06aa6ca016a386daeb749086756c5d7e
+Description:  GeoIP List for V2Ray
+
+Package: v2ray-geosite
+Version: 20250608120644.1
+Depends: libc
+License: MIT
+Section: net
+URL: https://www.v2fly.org
+Architecture: all
+Installed-Size: 2334720
+Filename: v2ray-geosite_20250608120644.1_all.ipk
+Size: 663620
+SHA256sum: 6aa9d6f519a013fdc3a488c555592a174c5d64c4018dc3e161d88a86f78f6926
+Description:  Geosite List for V2Ray
+
