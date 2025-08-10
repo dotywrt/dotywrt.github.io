@@ -1,0 +1,54 @@
+name: Track and Download immortalwrt-ipq Updates
+
+on:
+  schedule:
+    - cron: "0 * * * *" # Every hour
+  workflow_dispatch:
+
+jobs:
+  track-and-download:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y jq git
+
+      - name: Get latest commit info
+        id: get_commit
+        run: |
+          REPO="chasey-dev/immortalwrt-ipq"
+          BRANCH="main" # Change if needed
+
+          echo "🔍 Checking latest commit for $REPO..."
+          DATA=$(curl -s "https://api.github.com/repos/$REPO/commits?sha=$BRANCH&per_page=1")
+          COMMIT_SHA=$(echo "$DATA" | jq -r '.[0].sha')
+          COMMIT_MSG=$(echo "$DATA" | jq -r '.[0].commit.message')
+          COMMIT_DATE=$(echo "$DATA" | jq -r '.[0].commit.author.date')
+          COMMIT_AUTHOR=$(echo "$DATA" | jq -r '.[0].commit.author.name')
+
+          echo "commit_sha=$COMMIT_SHA" >> $GITHUB_OUTPUT
+          echo "commit_msg=$COMMIT_MSG" >> $GITHUB_OUTPUT
+          echo "commit_date=$COMMIT_DATE" >> $GITHUB_OUTPUT
+          echo "commit_author=$COMMIT_AUTHOR" >> $GITHUB_OUTPUT
+
+      - name: Clone repo
+        run: |
+          git clone --depth 2 --branch main https://github.com/chasey-dev/immortalwrt-ipq.git repo
+          cd repo
+
+          # Get changed files from last commit
+          CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r ${{ steps.get_commit.outputs.commit_sha }})
+          echo "$CHANGED_FILES" > ../changed_files.txt
+
+      - name: Copy changed files with folders
+        run: |
+          mkdir changed_files_output
+          while IFS= read -r file; do
+            mkdir -p "changed_files_output/$(dirname "$file")"
+            cp "repo/$file" "changed_files_output/$file"
+          done < changed_files.txt
+
+      - name: Upload changed files
+        uses: actions/upload-artifact@v4
+        with:
+          name: changed-files
+          path: changed_files_output
