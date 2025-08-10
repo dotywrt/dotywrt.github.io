@@ -11,17 +11,30 @@ jobs:
 
     env:
       REPO: "chasey-dev/immortalwrt-ipq"
-      BRANCH: "24.10-nss-mainline" # change if different
-      ALLOWED_AUTHORS: "chasey-dev qosmio" # space-separated list
+      BRANCH: "24.10-nss-mainline"
+      ALLOWED_AUTHORS: "chasey-dev qosmio"
+      STATE_FILE: ".last_commit_sha"
 
     steps:
       - name: Checkout tracker repo
         uses: actions/checkout@v4
 
+      - name: Load last commit SHA
+        id: load-sha
+        run: |
+          if [ -f "$STATE_FILE" ]; then
+            LAST_SHA=$(cat "$STATE_FILE")
+            echo "last_sha=$LAST_SHA" >> $GITHUB_OUTPUT
+            echo "📄 Last recorded commit: $LAST_SHA"
+          else
+            echo "📄 No previous commit SHA found"
+            echo "last_sha=" >> $GITHUB_OUTPUT
+          fi
+
       - name: Get latest commit info
         id: commit
         run: |
-          echo "🔍 Checking latest commit for $REPO..."
+          echo "🔍 Checking latest commit for $REPO on branch $BRANCH..."
           DATA=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             "https://api.github.com/repos/$REPO/commits?sha=$BRANCH&per_page=1")
 
@@ -36,6 +49,13 @@ jobs:
           else
             echo "❌ API error: $(echo "$DATA" | jq -r '.message // "Unknown error"')"
             exit 1
+          fi
+
+      - name: Stop if commit SHA is the same as last run
+        run: |
+          if [ "${{ steps.commit.outputs.commit_sha }}" = "${{ steps.load-sha.outputs.last_sha }}" ]; then
+            echo "⏹ No new commit since last run."
+            exit 0
           fi
 
       - name: Stop if commit is not from allowed authors
@@ -54,16 +74,38 @@ jobs:
           FILES=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             "https://api.github.com/repos/$REPO/commits/${{ steps.commit.outputs.commit_sha }}" \
             | jq -r '.files[].filename')
+
+          if [ -z "$FILES" ]; then
+            echo "⚠️ No changed files found for commit ${{ steps.commit.outputs.commit_sha }}"
+            mkdir -p updates
+            exit 0
+          fi
           
+          echo "Changed files:"
+          echo "$FILES"
+
           mkdir -p updates
           git clone --depth 1 --branch $BRANCH https://github.com/$REPO.git repo_src
           
           for FILE in $FILES; do
-            mkdir -p "updates/$(dirname "$FILE")"
-            cp -v "repo_src/$FILE" "updates/$FILE"
+            if [ -f "repo_src/$FILE" ]; then
+              mkdir -p "updates/$(dirname "$FILE")"
+              cp -v "repo_src/$FILE" "updates/$FILE"
+            else
+              echo "⚠️ Skipping missing/deleted file: $FILE"
+            fi
           done
           
           echo "✅ Copied updated files into ./updates"
+
+      - name: Save latest commit SHA
+        run: |
+          echo "${{ steps.commit.outputs.commit_sha }}" > "$STATE_FILE"
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add "$STATE_FILE"
+          git commit -m "Update last commit SHA to ${{ steps.commit.outputs.commit_sha }}" || echo "No changes to commit"
+          git push || echo "No push done"
 
       - name: Upload updated files as artifact
         uses: actions/upload-artifact@v4
