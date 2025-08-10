@@ -1,4 +1,4 @@
-name: Track chasey-dev Repo Updates
+name: Track ImmortalWrt Repo Updates
 
 on:
   schedule:
@@ -12,6 +12,7 @@ jobs:
     env:
       REPO: "chasey-dev/immortalwrt-ipq"
       BRANCH: "24.10-nss-mainline" # change if different
+      ALLOWED_AUTHORS: "chasey-dev qosmio" # space-separated list
 
     steps:
       - name: Checkout tracker repo
@@ -24,24 +25,28 @@ jobs:
           DATA=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             "https://api.github.com/repos/$REPO/commits?sha=$BRANCH&per_page=1")
 
-          # Fail if API returns an error
           if echo "$DATA" | jq -e '.[0]' >/dev/null 2>&1; then
             COMMIT_SHA=$(echo "$DATA" | jq -r '.[0].sha')
-            AUTHOR=$(echo "$DATA" | jq -r '.[0].commit.author.name')
+            AUTHOR=$(echo "$DATA" | jq -r '.[0].author.login // .[0].commit.author.name')
             DATE=$(echo "$DATA" | jq -r '.[0].commit.author.date')
             echo "commit_sha=$COMMIT_SHA" >> $GITHUB_OUTPUT
             echo "author=$AUTHOR" >> $GITHUB_OUTPUT
             echo "date=$DATE" >> $GITHUB_OUTPUT
+            echo "Latest commit: $COMMIT_SHA by $AUTHOR on $DATE"
           else
-            echo "❌ API returned an error: $(echo "$DATA" | jq -r '.message // "Unknown error"')"
+            echo "❌ API error: $(echo "$DATA" | jq -r '.message // "Unknown error"')"
             exit 1
           fi
 
-      - name: Stop if commit is not from chasey-dev
-        if: steps.commit.outputs.author != 'chasey-dev'
+      - name: Stop if commit is not from allowed authors
         run: |
-          echo "⚠️ Last commit was by '${{ steps.commit.outputs.author }}', not chasey-dev. Skipping."
-          exit 0
+          AUTHOR="${{ steps.commit.outputs.author }}"
+          echo "Checking if '$AUTHOR' is allowed..."
+          if ! echo "$ALLOWED_AUTHORS" | grep -qw "$AUTHOR"; then
+            echo "⚠️ Commit author '$AUTHOR' not in allowed list: $ALLOWED_AUTHORS"
+            exit 0
+          fi
+          echo "✅ Author '$AUTHOR' is allowed. Continuing..."
 
       - name: Get list of changed files
         run: |
