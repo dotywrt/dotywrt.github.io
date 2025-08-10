@@ -16,9 +16,6 @@ jobs:
       STATE_FILE: ".last_commit_sha"
 
     steps:
-      - name: Checkout tracker repo
-        uses: actions/checkout@v4
-
       - name: Load last commit SHA
         id: load-sha
         run: |
@@ -98,14 +95,9 @@ jobs:
           
           echo "✅ Copied updated files into ./updates"
 
-      - name: Save latest commit SHA
+      - name: Save latest commit SHA for next run
         run: |
           echo "${{ steps.commit.outputs.commit_sha }}" > "$STATE_FILE"
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add "$STATE_FILE"
-          git commit -m "Update last commit SHA to ${{ steps.commit.outputs.commit_sha }}" || echo "No changes to commit"
-          git push || echo "No push done"
 
       - name: Upload updated files as artifact
         uses: actions/upload-artifact@v4
