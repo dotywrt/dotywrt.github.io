@@ -1,54 +1,67 @@
-name: Track and Download immortalwrt-ipq Updates
+name: Track chasey-dev Repo Updates
 
 on:
   schedule:
-    - cron: "0 * * * *" # Every hour
+    - cron: "0 * * * *" # every hour
   workflow_dispatch:
 
 jobs:
-  track-and-download:
+  check-updates:
     runs-on: ubuntu-latest
+
+    env:
+      REPO: "chasey-dev/immortalwrt-ipq"
+      BRANCH: "24.10-nss-mainline" # change if different
+
     steps:
-      - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y jq git
+      - name: Checkout tracker repo
+        uses: actions/checkout@v4
 
       - name: Get latest commit info
-        id: get_commit
+        id: commit
         run: |
-          REPO="chasey-dev/immortalwrt-ipq"
-          BRANCH="main" # Change if needed
-
           echo "🔍 Checking latest commit for $REPO..."
-          DATA=$(curl -s "https://api.github.com/repos/$REPO/commits?sha=$BRANCH&per_page=1")
-          COMMIT_SHA=$(echo "$DATA" | jq -r '.[0].sha')
-          COMMIT_MSG=$(echo "$DATA" | jq -r '.[0].commit.message')
-          COMMIT_DATE=$(echo "$DATA" | jq -r '.[0].commit.author.date')
-          COMMIT_AUTHOR=$(echo "$DATA" | jq -r '.[0].commit.author.name')
+          DATA=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/$REPO/commits?sha=$BRANCH&per_page=1")
 
-          echo "commit_sha=$COMMIT_SHA" >> $GITHUB_OUTPUT
-          echo "commit_msg=$COMMIT_MSG" >> $GITHUB_OUTPUT
-          echo "commit_date=$COMMIT_DATE" >> $GITHUB_OUTPUT
-          echo "commit_author=$COMMIT_AUTHOR" >> $GITHUB_OUTPUT
+          # Fail if API returns an error
+          if echo "$DATA" | jq -e '.[0]' >/dev/null 2>&1; then
+            COMMIT_SHA=$(echo "$DATA" | jq -r '.[0].sha')
+            AUTHOR=$(echo "$DATA" | jq -r '.[0].commit.author.name')
+            DATE=$(echo "$DATA" | jq -r '.[0].commit.author.date')
+            echo "commit_sha=$COMMIT_SHA" >> $GITHUB_OUTPUT
+            echo "author=$AUTHOR" >> $GITHUB_OUTPUT
+            echo "date=$DATE" >> $GITHUB_OUTPUT
+          else
+            echo "❌ API returned an error: $(echo "$DATA" | jq -r '.message // "Unknown error"')"
+            exit 1
+          fi
 
-      - name: Clone repo
+      - name: Stop if commit is not from chasey-dev
+        if: steps.commit.outputs.author != 'chasey-dev'
         run: |
-          git clone --depth 2 --branch main https://github.com/chasey-dev/immortalwrt-ipq.git repo
-          cd repo
+          echo "⚠️ Last commit was by '${{ steps.commit.outputs.author }}', not chasey-dev. Skipping."
+          exit 0
 
-          # Get changed files from last commit
-          CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r ${{ steps.get_commit.outputs.commit_sha }})
-          echo "$CHANGED_FILES" > ../changed_files.txt
-
-      - name: Copy changed files with folders
+      - name: Get list of changed files
         run: |
-          mkdir changed_files_output
-          while IFS= read -r file; do
-            mkdir -p "changed_files_output/$(dirname "$file")"
-            cp "repo/$file" "changed_files_output/$file"
-          done < changed_files.txt
+          echo "📂 Fetching changed files for commit ${{ steps.commit.outputs.commit_sha }}"
+          FILES=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/$REPO/commits/${{ steps.commit.outputs.commit_sha }}" \
+            | jq -r '.files[].filename')
+          
+          mkdir -p updates
+          git clone --depth 1 --branch $BRANCH https://github.com/$REPO.git repo_src
+          
+          for FILE in $FILES; do
+            mkdir -p "updates/$(dirname "$FILE")"
+            cp -v "repo_src/$FILE" "updates/$FILE"
+          done
+          
+          echo "✅ Copied updated files into ./updates"
 
-      - name: Upload changed files
+      - name: Upload updated files as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: changed-files
-          path: changed_files_output
+          name: updated-files
+          path: updates
