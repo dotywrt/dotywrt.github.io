@@ -43,14 +43,25 @@ jobs:
           
           URL="https://api.github.com/repos/$REPO/commits?sha=$BRANCH&per_page=100"
           if [ -n "$LAST_SHA" ]; then
+            # We just use 'since' timestamp here; if LAST_SHA doesn't exist locally, fallback to 0 epoch
             URL="$URL&since=$(date -u -d @$(git log -1 --format=%ct $LAST_SHA 2>/dev/null || echo 0) +%Y-%m-%dT%H:%M:%SZ)"
           fi
 
-          COMMITS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "$URL" | jq -c '.[]')
-          echo "$COMMITS" > commits.json
-          
-          echo "✅ Found $(jq length commits.json) commits"
-          jq -r '.sha + " " + (.author.login // .commit.author.name)' commits.json
+          RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "$URL")
+
+          # Check if API returned an error
+          if echo "$RESPONSE" | jq -e '.message?' >/dev/null; then
+            echo "❌ GitHub API error: $(echo "$RESPONSE" | jq -r '.message')"
+            exit 1
+          fi
+
+          # Save commits array to file
+          echo "$RESPONSE" | jq '.' > commits.json
+
+          COUNT=$(jq length commits.json)
+          echo "✅ Found $COUNT commits"
+          jq -r '.[] | "\(.sha) \(.author.login // .commit.author.name)"' commits.json
+
 
       - name: Filter commits by allowed authors and copy updated files
         run: |
